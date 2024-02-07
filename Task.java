@@ -22,4 +22,13 @@ public class Task {
     public void markAsUndone() {
         this.isDone = false;
     }
+
+    public String toString() {
+        if (isDone){
+            return ("[T]" + "[" + this.getStatusIcon() + "] " + this.description);
+        }
+        else {
+            return ("[T]" + "[ ] " + this.description);
+        }
+    }
 }

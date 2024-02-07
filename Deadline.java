@@ -8,12 +8,18 @@ public class Deadline extends Task {
         this.by = by;
     }
 
-    public String toString(Boolean includeIcon) {
-        if (includeIcon){
-            return ("[D]" + "[" + this.getStatusIcon() + "] " + super.toString() + "by: " + this.by);
+    public Deadline(String[] userInputSeparatedBySlash) {
+        super(userInputSeparatedBySlash[0].replace("deadline", "").trim());
+        this.by = userInputSeparatedBySlash[1].replace("by", "").trim();
+    }
+
+   @Override
+    public String toString() {
+        if (isDone){
+            return ("[D]" + "[" + this.getStatusIcon() + "] " + super.getDescription() + " by: " + this.by);
         }
         else {
-            return ("[D]" + "[ ] " + super.toString() + "by: " + this.by);
+            return ("[D]" + "[ ] " + super.getDescription() + " by: " + this.by);
         }
     }
 }

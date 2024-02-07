@@ -1,9 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 // import packages to read user input from console
 
-public class NanamiL3 {
+public class NanamiL4 {
     private static Task[] tasklist = new Task[100];
     private static int taskcount;
     private int taskCount = 0;
@@ -76,8 +77,28 @@ public class NanamiL3 {
 
     private static void addToList(String input) {
         // add user's input to an array of tasks
-        tasklist[taskcount++] = new Task(input);
-        System.out.println("» I have added to your tasklist: [" + (taskcount - 1) + "] " + input); // echo contents of tasklist back to user
+
+        String[] inputArray = input.split("\\s+");
+
+        // check the first word
+        if (inputArray[0].equals("event")) {
+            // Event task, there is a start and end to the event
+            // separate the string to get the 'start'and 'end' information
+            System.out.println(Arrays.toString(input.split("/")));
+            tasklist[taskcount++] = new Event(input.split("/"));
+        }
+        else if (inputArray[0].equals("deadline")) {
+            // Deadline task, there is a date/time to do this by
+            // separate the string to get the deadline information
+            System.out.println(Arrays.toString(input.split("/")));
+            tasklist[taskcount++] = new Deadline(input.split("/"));
+        }
+        else {
+            // user specified "todo" OR user input did not specify type of event, default to a ToDo task
+            // ToDo task, there is no date or time attached
+            tasklist[taskcount++] = new ToDo(input);
+        }
+        System.out.println("» I have added to your tasklist: [" + (taskcount - 1) + "] " + tasklist[taskcount - 1].toString()); // echo contents of tasklist back to user
     }
 
     private static String readUserInputUnwrapped() throws IOException {
@@ -104,8 +125,7 @@ public class NanamiL3 {
         else {
             System.out.println("» This is your most recently updated tasklist: ");
             for (int i = 0; i < taskcount; i++) {
-                Task task = tasklist[i];
-                System.out.println("\t" + i + " [" + task.getStatusIcon() + "] " + task.getDescription());
+                System.out.println("\t" + i + " " + tasklist[i].toString());
             }
         }
     }

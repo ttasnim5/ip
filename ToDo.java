@@ -1,17 +1,16 @@
 public class ToDo extends Task {
-    protected String by;
-
-    public ToDo(String description, String by) {
+    public ToDo(String description) {
         // task without any date/time attached to it
-        super(description);
+        super(description.replace("todo", "").trim());
     }
 
-    public String toString(Boolean includeIcon) {
-        if (includeIcon){
-            return ("[T]" + "[" + this.getStatusIcon() + "] " + super.toString());
+    @Override
+    public String toString() {
+        if (isDone){
+            return ("[T]" + "[" + this.getStatusIcon() + "] " + super.getDescription());
         }
         else {
-            return ("[T]" + "[ ] " + super.toString());
+            return ("[T]" + "[ ] " + super.getDescription());
         }
     }
 }

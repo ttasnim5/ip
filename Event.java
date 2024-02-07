@@ -9,12 +9,19 @@ public class Event extends Task {
         this.to = to;
     }
 
-    public String toString(Boolean includeIcon) {
-        if (includeIcon){
-            return ("[E]" + "[" + this.getStatusIcon() + "] " + super.toString() + "from: " + this.from + "to: " + this.to);
+    public Event(String[] userInputSeparatedBySlash) {
+        super(userInputSeparatedBySlash[0].replace("event", "").trim());
+        this.from = userInputSeparatedBySlash[1].replace("from", "").trim();
+        this.to = userInputSeparatedBySlash[2].replace("to", "").trim();
+    }
+
+    @Override
+    public String toString() {
+        if (isDone){
+            return ("[E]" + "[" + this.getStatusIcon() + "] " + super.getDescription() + " from:" + this.from + " to: " + this.to);
         }
         else {
-            return ("[E]" + "[ ] " + super.toString() + "from: " + this.from + "to: " + this.to);
+            return ("[E]" + "[ ] " + super.getDescription() + " from: " + this.from + " to: " + this.to);
         }
     }
 }
