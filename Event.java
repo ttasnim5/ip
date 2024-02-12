@@ -1,6 +1,8 @@
+import java.util.Arrays;
+
 public class Event extends Task {
 
-    protected String from, to;
+    protected String from, to = "";
 
     public Event(String description, String from, String to) {
         // tasks that start at a specific date/time and ends at a specific date/time
@@ -9,10 +11,31 @@ public class Event extends Task {
         this.to = to;
     }
 
-    public Event(String[] userInputSeparatedBySlash) {
+    public Event(String[] userInputSeparatedBySlash) throws EventMismatchedParameterException, EmptyTaskException {
         super(userInputSeparatedBySlash[0].replace("event", "").trim());
-        this.from = userInputSeparatedBySlash[1].replace("from", "").trim();
-        this.to = userInputSeparatedBySlash[2].replace("to", "").trim();
+
+        System.out.println(Arrays.toString(userInputSeparatedBySlash));
+        System.out.println("description = " + this.getDescription());
+
+        if(this.getDescription().isEmpty()) {
+            throw new EmptyTaskException();
+        }
+        else if (userInputSeparatedBySlash.length > 3 || userInputSeparatedBySlash.length < 3) {
+            // there's too many or not enough parameters, to/from or otherwise
+            throw new EventMismatchedParameterException();
+        }
+        else if (userInputSeparatedBySlash[1].contains("from") && userInputSeparatedBySlash[2].contains("to")) {
+            // from => to
+            this.from = userInputSeparatedBySlash[1].replace("from", "").trim();
+            this.to = userInputSeparatedBySlash[2].replace("to", "").trim();
+        }
+        else if (userInputSeparatedBySlash[1].contains("to") && userInputSeparatedBySlash[2].contains("from")) {
+            this.to = userInputSeparatedBySlash[1].replace("to", "").trim();
+            this.from = userInputSeparatedBySlash[2].replace("from", "").trim();
+        }
+        else {
+            throw new EventMismatchedParameterException();
+        }
     }
 
     @Override

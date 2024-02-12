@@ -1,10 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-// import packages to read user input from console
 
-public class NanamiL4 {
+public class Nanami {
     private static Task[] tasklist = new Task[100];
     private static int taskcount;
     private int taskCount = 0;
@@ -15,10 +13,14 @@ public class NanamiL4 {
         giveIntroduction();
 
         while (applicationOpen) {
-            String input = readUserInput();
+            String input = readUserInput().trim();
             String [] commandWords = input.split("\\s+"); // cuts phrases at spaces into an array
 
-            // perform actions based on user input
+            if (input.equals("")) { // check for empty string
+                System.out.println("You gotta give me something to work with here.");
+            }
+
+            // one-word commands
             if (input.equals("bye") || input.equals("Bye")) {
                 // if the command is exactly 'bye' or 'Bye'
                 giveFarewell();
@@ -28,33 +30,35 @@ public class NanamiL4 {
                 // if the command is exactly 'list' or 'List'
                 displayTaskList();
             }
-            else if (commandWords[0].equals("mark") || commandWords[0].equals("Mark")) {
-                int taskNumber = checkIfNumber(commandWords[1]);
-                // if the first word is mark and the second word is a number
-                if (taskNumber < taskcount) { // if the task exists in the tasklist
-                    tasklist[taskNumber].markAsDone();
-                    System.out.println("I've marked [" + taskNumber + "] as completed.");
-                }
-                else {
-                    System.out.println("» This task number does not exist.");
-                }
-                displayTaskList();
-            }
-            else if (commandWords[0].equals("unmark") || commandWords[0].equals("Unmark")) {
-                int taskNumber = checkIfNumber(commandWords[1]);
-                // if the first word is unmark and the second word is a number
-                if (taskNumber < taskcount) { // if the task exists in the tasklist
-                    tasklist[taskNumber].markAsUndone();
-                    System.out.println("I've marked [" + taskNumber + "] as incompleted.");
-                }
-                else {
-                    System.out.println("» This task number does not exist.");
-                }
-                displayTaskList();
+            else if (commandWords[0].equals("mark") || commandWords[0].equals("unmark")) {
+                changeTaskMarker(commandWords);
             }
             else {
                 addToList(input);
             }
+        }
+    }
+
+    private static void changeTaskMarker(String[] commandWords) {
+        try {
+            int taskNumber = Integer.parseInt(commandWords[1]);
+            if (taskNumber > taskcount || taskNumber < 0) { // if the task does not exist in the tasklist
+                System.out.println("That task isn't on record. Look at it again.");
+                return;
+            }
+
+            if (commandWords[0].equals("mark")) {
+                tasklist[taskNumber].markAsDone();
+                System.out.println("I've marked [" + taskNumber + "] as completed.");
+            }
+            else {
+                tasklist[taskNumber].markAsUndone();
+                System.out.println("I've marked [" + taskNumber + "] as uncompleted.");
+            }
+            displayTaskList();
+        }
+        catch (NumberFormatException e){
+            System.out.println("If you need me to mark or unmark a task, I need a task number right after the command word.");
         }
     }
 
@@ -77,28 +81,44 @@ public class NanamiL4 {
 
     private static void addToList(String input) {
         // add user's input to an array of tasks
-
+        if (input.isEmpty()) {
+            return;
+        }
         String[] inputArray = input.split("\\s+");
 
-        // check the first word
-        if (inputArray[0].equals("event")) {
-            // Event task, there is a start and end to the event
-            // separate the string to get the 'start'and 'end' information
-            System.out.println(Arrays.toString(input.split("/")));
-            tasklist[taskcount++] = new Event(input.split("/"));
+        if (inputArray[0].equals("todo")) {
+            try {
+                ToDo newTask = new ToDo(input.split("/"));
+                tasklist[taskcount++] = newTask;
+            } catch (EmptyTaskException e) {
+                System.out.println("I can't store a todo like that. It only needs a description, no attachments using /.");
+            } catch (ToDoMismatchedParameterException e) {
+                System.out.println("A todo task does not have any attachments using /. I can't store it like this.");
+            }
         }
         else if (inputArray[0].equals("deadline")) {
-            // Deadline task, there is a date/time to do this by
-            // separate the string to get the deadline information
-            System.out.println(Arrays.toString(input.split("/")));
-            tasklist[taskcount++] = new Deadline(input.split("/"));
+            try {
+                Deadline newTask = new Deadline(input.split("/"));
+                tasklist[taskcount++] = newTask;
+            } catch (EmptyTaskException e) {
+                System.out.println("The deadline is missing something. I need the task type, description, and /by attachment. Try again.");
+            } catch (DeadlineMismatchedParameterException e) {
+                System.out.println("A deadline has a /by attachment only. I can't store it like this.");
+            }
+        }
+        else if (inputArray[0].equals("event")) {
+            try {
+                Event newTask = new Event(input.split("/"));
+                tasklist[taskcount++] = newTask;
+            } catch (EmptyTaskException e) {
+                System.out.println("The event is missing information. I need the task type, description, and /to and /from attachments. Try again.");
+            } catch (EventMismatchedParameterException e) {
+                System.out.println("An event has a /to attachment and a /from attachment only. I can't store it like this.");
+            }
         }
         else {
-            // user specified "todo" OR user input did not specify type of event, default to a ToDo task
-            // ToDo task, there is no date or time attached
-            tasklist[taskcount++] = new ToDo(input);
+            System.out.println("I'm sorry, can you repeat that with the corresponding task type?\nYou can do a todo task, a deadline task, or an event.");
         }
-        System.out.println("» I have added to your tasklist: [" + (taskcount - 1) + "] " + tasklist[taskcount - 1].toString()); // echo contents of tasklist back to user
     }
 
     private static String readUserInputUnwrapped() throws IOException {

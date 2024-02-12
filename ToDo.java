@@ -1,7 +1,18 @@
+import java.util.Arrays;
+
 public class ToDo extends Task {
-    public ToDo(String description) {
-        // task without any date/time attached to it
-        super(description.replace("todo", "").trim());
+    public ToDo(String[] userInputSeparatedBySlash) throws ToDoMismatchedParameterException, EmptyTaskException {
+        super(userInputSeparatedBySlash[0].replace("todo", "").trim());
+
+        System.out.println(Arrays.toString(userInputSeparatedBySlash));
+        System.out.println("description = " + this.getDescription());
+
+        if (this.getDescription().isEmpty()) {
+            throw new EmptyTaskException();
+        }
+        else if (userInputSeparatedBySlash.length > 1) {
+            throw new ToDoMismatchedParameterException();
+        }
     }
 
     @Override
