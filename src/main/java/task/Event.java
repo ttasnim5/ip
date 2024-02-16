@@ -1,6 +1,7 @@
-package src.main.java;
+package src.main.java.task;
 
-import src.main.java.EmptyTaskException;
+import src.main.java.taskExceptions.EmptyTaskException;
+import src.main.java.taskExceptions.EventMismatchedParameterException;
 
 import java.util.Arrays;
 

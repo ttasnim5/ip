@@ -1,4 +1,4 @@
-package src.main.java;
+package src.main.java.referenceFiles;
 
 public class Nanami_L0 {
     public static void main(String args[]) {

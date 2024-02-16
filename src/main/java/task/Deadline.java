@@ -1,4 +1,7 @@
-package src.main.java;
+package src.main.java.task;
+
+import src.main.java.taskExceptions.DeadlineMismatchedParameterException;
+import src.main.java.taskExceptions.EmptyTaskException;
 
 import java.util.Arrays;
 
