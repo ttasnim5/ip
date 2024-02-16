@@ -14,6 +14,9 @@ public class Deadline extends Task {
 
         if(this.getDescription().isEmpty()) {
             throw new EmptyTaskException();
+        } else if (userInputSeparatedBySlash.length == 1) {
+            // no parameters given
+            throw new DeadlineMismatchedParameterException();
         }
         else if (userInputSeparatedBySlash.length > 2) {
             // there's multiple parameters, /by or otherwise
