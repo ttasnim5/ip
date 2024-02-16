@@ -1,3 +1,7 @@
+package src.main.java;
+
+import src.main.java.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -71,7 +75,7 @@ public class Nanami {
         System.out.println("\t» ¤ «» ¤ «» ¤ «» ¤ «» ¤ «» ¤ «» ¤ «» ¤ «» ¤ «»\n");
 
         // introduce nanami as a task manager
-        System.out.println("» Hello. I am Nanami, your task-manager.\n» What can I do for you?\n");
+        System.out.println("» Hello. I am src.main.java.Nanami, your task-manager.\n» What can I do for you?\n");
     }
 
     private static void giveFarewell() {

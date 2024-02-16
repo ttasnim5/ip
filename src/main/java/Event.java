@@ -1,3 +1,7 @@
+package src.main.java;
+
+import src.main.java.EmptyTaskException;
+
 import java.util.Arrays;
 
 public class Event extends Task {
