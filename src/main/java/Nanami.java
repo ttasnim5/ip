@@ -44,9 +44,32 @@ public class Nanami {
             else if (commandWords[0].equals("mark") || commandWords[0].equals("unmark")) {
                 changeTaskMarker(commandWords);
             }
+            else if (commandWords[0].equals("delete")) {
+                deleteTask(commandWords[1]);
+            }
             else {
                 addToList(input);
             }
+        }
+    }
+
+    private static void deleteTask(String word) {
+        try {
+            int taskNumber = Integer.parseInt(word);
+            if (taskNumber > taskcount || taskNumber < 0) { // if the task does not exist in the tasklist
+                System.out.println("That task isn't on record. Look at it again.");
+                return;
+            }
+            Task currTask = tasklist[taskNumber];
+            for (int i = taskNumber; i < taskNumber; i++) {
+                tasklist[i] = tasklist[i + 1];
+            }
+            taskcount--;
+            System.out.println("Okay, I've scrapped " + currTask.toString());
+            displayTaskList();
+        }
+        catch (NumberFormatException e){
+            System.out.println("If you want me to delete a task, I need a task number with it.");
         }
     }
 
@@ -161,12 +184,12 @@ public class Nanami {
         }
     }
 
-    private static int checkIfNumber(String input) throws NumberFormatException {
+    private static int checkIfNumber(String input) throws EmptyTaskException {
         int taskNumber = taskcount + 1; // default it to not be a valid task number by the tasklist
         try {
             taskNumber = Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            addToList("mark "+ input);
+            throw new EmptyTaskException();
         }
         return taskNumber;
     }
