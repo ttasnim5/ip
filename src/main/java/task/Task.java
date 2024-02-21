@@ -33,4 +33,8 @@ public class Task {
             return ("[T]" + "[ ] " + this.description);
         }
     }
+
+    public String sendToFile() {
+        return description + " || " + isDone;
+    }
 }

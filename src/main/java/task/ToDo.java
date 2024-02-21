@@ -29,4 +29,11 @@ public class ToDo extends Task {
             return ("[T]" + "[ ] " + super.getDescription());
         }
     }
+
+    @Override
+    public String sendToFile() {
+        boolean isDone = true;
+        if (this.getStatusIcon().equals(" ")) { isDone = false; }
+        return "T || " + this.getDescription() + " || " + isDone;
+    }
 }

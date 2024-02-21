@@ -42,4 +42,11 @@ public class Deadline extends Task {
             return ("[D]" + "[ ] " + super.getDescription() + " by: " + this.by);
         }
     }
+
+    @Override
+    public String sendToFile() {
+        boolean isDone = true;
+        if (this.getStatusIcon().equals(" ")) { isDone = false; }
+        return "D || " + this.getDescription() + " || " + this.by + " || " + isDone;
+    }
 }

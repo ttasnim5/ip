@@ -52,4 +52,11 @@ public class Event extends Task {
             return ("[E]" + "[ ] " + super.getDescription() + " from: " + this.from + " to: " + this.to);
         }
     }
+
+    @Override
+    public String sendToFile() {
+        boolean isDone = true;
+        if (this.getStatusIcon().equals(" ")) { isDone = false; }
+        return "D || " + this.getDescription() + " || " + this.from + " || " + this.to + " || " + isDone;
+    }
 }

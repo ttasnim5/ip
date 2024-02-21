@@ -10,14 +10,17 @@ import src.main.java.taskExceptions.EventMismatchedParameterException;
 import src.main.java.taskExceptions.ToDoMismatchedParameterException;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
 
 public class Nanami {
     private static Task[] tasklist = new Task[100];
     private static int taskcount;
     private int taskCount = 0;
     private static boolean applicationOpen = true;
+    private String path;
 
     public static void main(String args[]) {
         // driver code to begin the application
@@ -65,6 +68,7 @@ public class Nanami {
                 tasklist[i] = tasklist[i + 1];
             }
             taskcount--;
+            updateFile(0);
             System.out.println("Okay, I've scrapped " + currTask.toString());
             displayTaskList();
         }
@@ -124,6 +128,7 @@ public class Nanami {
             try {
                 ToDo newTask = new ToDo(input.split("/"));
                 tasklist[taskcount++] = newTask;
+                updateFile(1);
             } catch (EmptyTaskException e) {
                 System.out.println("I can't store a todo like that. It only needs a description, no attachments using /.");
             } catch (ToDoMismatchedParameterException e) {
@@ -134,6 +139,7 @@ public class Nanami {
             try {
                 Deadline newTask = new Deadline(input.split("/"));
                 tasklist[taskcount++] = newTask;
+                updateFile(1):
             } catch (EmptyTaskException e) {
                 System.out.println("The deadline is missing something. I need the task type, description, and /by attachment. Try again.");
             } catch (DeadlineMismatchedParameterException e) {
@@ -144,6 +150,7 @@ public class Nanami {
             try {
                 Event newTask = new Event(input.split("/"));
                 tasklist[taskcount++] = newTask;
+                updateFile(1);
             } catch (EmptyTaskException e) {
                 System.out.println("The event is missing information. I need the task type, description, and /to and /from attachments. Try again.");
             } catch (EventMismatchedParameterException e) {
@@ -181,6 +188,19 @@ public class Nanami {
             for (int i = 0; i < taskcount; i++) {
                 System.out.println("\t" + i + " " + tasklist[i].toString());
             }
+        }
+    }
+
+    private static void updateFile(int mode) throws IOException {
+        FileWriter write;
+        if (mode == 0) {
+            // how to empty out a text file ???
+            for (int i = 0; i < taskcount; i++) {
+                write(tasklist[i].sendToFile());
+            }
+        } else {
+            write = new FileWriter(path, tasklist[taskcount].sendToFile());
+            // append new task to file
         }
     }
 
