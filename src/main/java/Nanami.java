@@ -9,21 +9,30 @@ import src.main.java.taskExceptions.EmptyTaskException;
 import src.main.java.taskExceptions.EventMismatchedParameterException;
 import src.main.java.taskExceptions.ToDoMismatchedParameterException;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
 
 public class Nanami {
     private static Task[] tasklist = new Task[100];
     private static int taskcount;
     private int taskCount = 0;
     private static boolean applicationOpen = true;
-    private String path;
+    private FileWriter write;
+    private static File outfile = new File("taskDrive.txt");
+    private static FileWriter overwriter, appender;
 
     public static void main(String args[]) {
         // driver code to begin the application
+        try {
+            overwriter = new FileWriter(outfile, false);
+            appender = new FileWriter(outfile, true);
+
+        } catch (IOException e) {
+            System.out.println("filing starting failed");
+        }
+
+        loadData();
+
         giveIntroduction();
 
         while (applicationOpen) {
@@ -74,6 +83,8 @@ public class Nanami {
         }
         catch (NumberFormatException e){
             System.out.println("If you want me to delete a task, I need a task number with it.");
+        } catch (IOException e) {
+            // i think this only happens if the file doesn't exist which it DOES
         }
     }
 
@@ -93,10 +104,13 @@ public class Nanami {
                 tasklist[taskNumber].markAsUndone();
                 System.out.println("I've marked [" + taskNumber + "] as uncompleted.");
             }
+            updateFile(0);
             displayTaskList();
         }
         catch (NumberFormatException e){
             System.out.println("If you need me to mark or unmark a task, I need a task number right after the command word.");
+        } catch (IOException e) {
+            // i think this only happens if the file doesn't exist which it DOES
         }
     }
 
@@ -133,17 +147,22 @@ public class Nanami {
                 System.out.println("I can't store a todo like that. It only needs a description, no attachments using /.");
             } catch (ToDoMismatchedParameterException e) {
                 System.out.println("A todo task does not have any attachments using /. I can't store it like this.");
+            } catch (IOException e) {
+                // i think this only happens if the file doesn't exist which it DOES
             }
         }
         else if (inputArray[0].equals("deadline")) {
             try {
                 Deadline newTask = new Deadline(input.split("/"));
                 tasklist[taskcount++] = newTask;
-                updateFile(1):
+                updateFile(1);
             } catch (EmptyTaskException e) {
                 System.out.println("The deadline is missing something. I need the task type, description, and /by attachment. Try again.");
             } catch (DeadlineMismatchedParameterException e) {
                 System.out.println("A deadline has a /by attachment only. I can't store it like this.");
+            }
+            catch (IOException e) {
+                // i think this only happens if the file doesn't exist which it DOES
             }
         }
         else if (inputArray[0].equals("event")) {
@@ -155,6 +174,8 @@ public class Nanami {
                 System.out.println("The event is missing information. I need the task type, description, and /to and /from attachments. Try again.");
             } catch (EventMismatchedParameterException e) {
                 System.out.println("An event has a /to attachment and a /from attachment only. I can't store it like this.");
+            } catch (IOException e) {
+                // i think this only happens if the file doesn't exist which it DOES
             }
         }
         else {
@@ -192,15 +213,56 @@ public class Nanami {
     }
 
     private static void updateFile(int mode) throws IOException {
-        FileWriter write;
-        if (mode == 0) {
-            // how to empty out a text file ???
+        if (mode == 1) { // just adding to the list
+            appender.write(tasklist[taskcount - 1].sendToFile() + "\n");
+            appender.flush();
+        }
+        else { // in the case of deleting a task, marking a task as done/undone
             for (int i = 0; i < taskcount; i++) {
-                write(tasklist[i].sendToFile());
+                overwriter.write(tasklist[i].sendToFile() + "\n");
+                overwriter.flush();
             }
-        } else {
-            write = new FileWriter(path, tasklist[taskcount].sendToFile());
-            // append new task to file
+        }
+    }
+
+    private static void loadData() {
+        // prob now is that it's not reading anything
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("taskDrive.txt"));
+            String line = reader.readLine();
+            System.out.println("first line " + line);
+            int count = 0;
+            int doneIndex = 0;
+
+            while (line != null) {
+                String[] pastData = line.split("||");
+                String tasktype = pastData[0].trim();
+                if (tasktype.equals("T")) {
+                    addToList("todo " + pastData[1]);
+                    doneIndex = 2;
+                    System.out.println("adding todo " + pastData[1]);
+                } else if (tasktype.equals("D")) {
+                    addToList("deadline " + pastData[1] + " /by " + pastData[2]);
+                    doneIndex = 3;
+                    System.out.println("adding dead " + pastData[1]);
+                } else {
+                    addToList("event " + pastData[1] + " /from " + pastData[2] + " /to " + pastData[3]);
+                    doneIndex = 4;
+                    System.out.println("adding ev " + pastData[1]);
+                }
+                if (pastData[doneIndex].equals("true")) {
+                    String [] commandWords = new String[2];
+                    commandWords[0] = "mark"; commandWords[1] = Integer.toString(count);
+                    changeTaskMarker(commandWords);
+                }
+                line = reader.readLine();
+            }
+            reader.close();
+            System.out.println("finished loading everything !\n");
+        } catch (FileNotFoundException e) {
+            System.out.println("\tfile not found\t");
+        } catch (IOException e) {
+            System.out.println("\tio exception\t");
         }
     }
 
