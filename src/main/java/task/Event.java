@@ -19,26 +19,19 @@ public class Event extends Task {
     public Event(String[] userInputSeparatedBySlash) throws EventMismatchedParameterException, EmptyTaskException {
         super(userInputSeparatedBySlash[0].replace("event", "").trim());
 
-        System.out.println(Arrays.toString(userInputSeparatedBySlash));
-        System.out.println("description = " + this.getDescription());
-
         if(this.getDescription().isEmpty()) {
             throw new EmptyTaskException();
-        }
-        else if (userInputSeparatedBySlash.length > 3 || userInputSeparatedBySlash.length < 3) {
+        } else if (userInputSeparatedBySlash.length > 3 || userInputSeparatedBySlash.length < 3) {
             // there's too many or not enough parameters, to/from or otherwise
             throw new EventMismatchedParameterException();
-        }
-        else if (userInputSeparatedBySlash[1].contains("from") && userInputSeparatedBySlash[2].contains("to")) {
+        } else if (userInputSeparatedBySlash[1].contains("from") && userInputSeparatedBySlash[2].contains("to")) {
             // from => to
             this.from = userInputSeparatedBySlash[1].replace("from", "").trim();
             this.to = userInputSeparatedBySlash[2].replace("to", "").trim();
-        }
-        else if (userInputSeparatedBySlash[1].contains("to") && userInputSeparatedBySlash[2].contains("from")) {
+        } else if (userInputSeparatedBySlash[1].contains("to") && userInputSeparatedBySlash[2].contains("from")) {
             this.to = userInputSeparatedBySlash[1].replace("to", "").trim();
             this.from = userInputSeparatedBySlash[2].replace("from", "").trim();
-        }
-        else {
+        } else {
             throw new EventMismatchedParameterException();
         }
     }
@@ -47,8 +40,7 @@ public class Event extends Task {
     public String toString() {
         if (isDone){
             return ("[E]" + "[" + this.getStatusIcon() + "] " + super.getDescription() + " from:" + this.from + " to: " + this.to);
-        }
-        else {
+        } else {
             return ("[E]" + "[ ] " + super.getDescription() + " from: " + this.from + " to: " + this.to);
         }
     }
@@ -56,7 +48,9 @@ public class Event extends Task {
     @Override
     public String sendToFile() {
         boolean isDone = true;
-        if (this.getStatusIcon().equals(" ")) { isDone = false; }
-        return "D || " + this.getDescription() + " || " + this.from + " || " + this.to + " || " + isDone;
+        if (this.getStatusIcon().equals(" ")) {
+            isDone = false;
+        }
+        return "E | " + this.getDescription() + " | " + this.from + " | " + this.to + " | " + isDone;
     }
 }

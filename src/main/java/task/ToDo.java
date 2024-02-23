@@ -9,13 +9,9 @@ public class ToDo extends Task {
     public ToDo(String[] userInputSeparatedBySlash) throws ToDoMismatchedParameterException, EmptyTaskException {
         super(userInputSeparatedBySlash[0].replace("todo", "").trim());
 
-        System.out.println(Arrays.toString(userInputSeparatedBySlash));
-        System.out.println("description = " + this.getDescription());
-
         if (this.getDescription().isEmpty()) {
             throw new EmptyTaskException();
-        }
-        else if (userInputSeparatedBySlash.length > 1) {
+        } else if (userInputSeparatedBySlash.length > 1) {
             throw new ToDoMismatchedParameterException();
         }
     }
@@ -24,8 +20,7 @@ public class ToDo extends Task {
     public String toString() {
         if (isDone){
             return ("[T]" + "[" + this.getStatusIcon() + "] " + super.getDescription());
-        }
-        else {
+        } else {
             return ("[T]" + "[ ] " + super.getDescription());
         }
     }
@@ -33,7 +28,9 @@ public class ToDo extends Task {
     @Override
     public String sendToFile() {
         boolean isDone = true;
-        if (this.getStatusIcon().equals(" ")) { isDone = false; }
-        return "T || " + this.getDescription() + " || " + isDone;
+        if (this.getStatusIcon().equals(" ")) {
+            isDone = false;
+        }
+        return "T | " + this.getDescription() + " | " + isDone;
     }
 }

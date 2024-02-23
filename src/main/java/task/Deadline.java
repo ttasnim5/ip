@@ -12,20 +12,15 @@ public class Deadline extends Task {
     public Deadline(String[] userInputSeparatedBySlash) throws DeadlineMismatchedParameterException, EmptyTaskException {
         super(userInputSeparatedBySlash[0].replace("deadline", "").trim());
 
-        System.out.println(Arrays.toString(userInputSeparatedBySlash));
-        System.out.println("description = " + this.getDescription());
-
-        if(this.getDescription().isEmpty()) {
+        if (this.getDescription().isEmpty()) {
             throw new EmptyTaskException();
         } else if (userInputSeparatedBySlash.length == 1) {
             // no parameters given
             throw new DeadlineMismatchedParameterException();
-        }
-        else if (userInputSeparatedBySlash.length > 2) {
+        } else if (userInputSeparatedBySlash.length > 2) {
             // there's multiple parameters, /by or otherwise
             throw new DeadlineMismatchedParameterException();
-        }
-        else if (!userInputSeparatedBySlash[1].contains("by")) {
+        } else if (!userInputSeparatedBySlash[1].contains("by")) {
             // if the singular parameter is not by
             throw new DeadlineMismatchedParameterException();
         }
@@ -37,8 +32,7 @@ public class Deadline extends Task {
     public String toString() {
         if (isDone){
             return ("[D]" + "[" + this.getStatusIcon() + "] " + super.getDescription() + " by: " + this.by);
-        }
-        else {
+        } else {
             return ("[D]" + "[ ] " + super.getDescription() + " by: " + this.by);
         }
     }
@@ -46,7 +40,9 @@ public class Deadline extends Task {
     @Override
     public String sendToFile() {
         boolean isDone = true;
-        if (this.getStatusIcon().equals(" ")) { isDone = false; }
-        return "D || " + this.getDescription() + " || " + this.by + " || " + isDone;
+        if (this.getStatusIcon().equals(" ")) {
+            isDone = false;
+        }
+        return "D | " + this.getDescription() + " | " + this.by + " | " + isDone;
     }
 }

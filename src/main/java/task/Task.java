@@ -28,13 +28,12 @@ public class Task {
     public String toString() {
         if (isDone){
             return ("[T]" + "[" + this.getStatusIcon() + "] " + this.description);
-        }
-        else {
+        } else {
             return ("[T]" + "[ ] " + this.description);
         }
     }
 
     public String sendToFile() {
-        return description + " || " + isDone;
+        return description + " | " + isDone;
     }
 }
