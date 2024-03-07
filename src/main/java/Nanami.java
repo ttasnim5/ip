@@ -213,11 +213,10 @@ public class Nanami {
                 System.out.println("» That task isn't on record. Look at it again.");
                 return;
             }
-
+            Task currTask = tasklist[taskNumber];
             for (int i = taskNumber; i < taskcount; i++) {
                 tasklist[i] = tasklist[i + 1];
             }
-            Task currTask = tasklist[taskNumber];
             taskcount--;
             updateFile(0);
             System.out.println("» Okay, I've scrapped " + currTask.toString());
