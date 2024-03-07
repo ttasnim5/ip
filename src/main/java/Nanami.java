@@ -30,10 +30,12 @@ public class Nanami {
         Ui.giveIntroduction();
 
         while (applicationOpen) {
-            String input = readUserInput().trim();
+            String input = Parser.readUserInput();
             String [] commandWords = input.split("\\s+"); // cuts phrases at spaces into an array
 
-            if (input.isEmpty()) { // check for empty string
+            if (input == null) {
+                applicationOpen = false;
+            } else if (input.isEmpty()) { // check for empty string
                 System.out.println("» You gotta give me something to work with here.");
             }
 
@@ -69,7 +71,6 @@ public class Nanami {
             }
         }
     }
-
 
     /**
      * Verifies the validity of the provided task number and checks or unchecks it from the list and memory.
@@ -119,35 +120,6 @@ public class Nanami {
         } catch (IOException e) {
             System.out.println("» could not end the file properly");
             applicationOpen = false;
-        }
-    }
-
-    /**
-     * Read's the user's request from standard input.
-     * Returns a string of the user's input.
-     *
-     * @return user input line.
-     * @throws IOException If input stream is closed/ends unexpectedly, or becomes invalid or corrupted.
-     */
-    public static String readUserInputUnwrapped() throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        return in.readLine().trim();
-    }
-
-    /**
-     * Wrapper function for readUserInputUnwrapped(). Ensures ability to communicate and work with user input.
-     * Returns a string of the user's input.
-     * If an IOException is caught, the program terminates and returns null.
-     *
-     * @return user input line.
-     */
-    public static String readUserInput() {// wrapper function for reading user input
-        try {
-            return readUserInputUnwrapped();
-        } catch (IOException e) {
-            System.out.println("» Sorry, something went wrong.\n");
-            applicationOpen = false;
-            return null;
         }
     }
 
