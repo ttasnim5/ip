@@ -1,0 +1,6 @@
+T | banna | true
+D | banna | yuh | false
+E | banna | yuh | yuh | false
+T | 4 | true
+D | 4 | 5 | false
+T | bake | false

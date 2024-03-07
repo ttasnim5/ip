@@ -33,9 +33,10 @@ public class Nanami {
         while (applicationOpen) {
             String input = readUserInput().trim();
             String [] commandWords = input.split("\\s+"); // cuts phrases at spaces into an array
+            System.out.println("commands = " + commandWords[0]);
 
             if (input.equals("")) { // check for empty string
-                System.out.println("You gotta give me something to work with here.");
+                System.out.println("» You gotta give me something to work with here.");
             }
 
             // one-word commands
@@ -55,18 +56,33 @@ public class Nanami {
             } else if (input.equals("list") || input.equals("List")) {
                 // if the command is exactly 'list' or 'List'
                 displayTaskList();
-            }
-            else if (commandWords[0].equals("mark") || commandWords[0].equals("unmark")) {
+            } else if (commandWords[0].equals("mark") || commandWords[0].equals("unmark")) {
                 if (commandWords.length != 2) {
-                    System.out.println("You just need a task number with that order.");
+                    System.out.println("» You just need a task number with that order.");
                 } else {
                     changeTaskMarker(commandWords);
                 }
             } else if (commandWords[0].equals("delete")) {
                 deleteTask(commandWords[1]);
+            } else if (commandWords[0].equals("find") || commandWords[0].equals("Find")) {
+                find(input.substring(4).trim());
             } else {
                 addToList(input);
             }
+        }
+    }
+
+    private static void find(String desiredTaskDescription) {
+        System.out.println("» Let's see...");
+        boolean found = false;
+        for (int i = 0; i < taskcount; i++) {
+            if (tasklist[i].getDescription().contains(desiredTaskDescription)) {
+                System.out.println(tasklist[i]);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("» I don't know about that one. Can't find it anywhere.");
         }
     }
 
@@ -74,7 +90,7 @@ public class Nanami {
         try {
             int taskNumber = Integer.parseInt(word);
             if (taskNumber > taskcount || taskNumber < 0) { // if the task does not exist in the tasklist
-                System.out.println("That task isn't on record. Look at it again.");
+                System.out.println("» That task isn't on record. Look at it again.");
                 return;
             }
 
@@ -84,12 +100,12 @@ public class Nanami {
             Task currTask = tasklist[taskNumber];
             taskcount--;
             updateFile(0);
-            System.out.println("Okay, I've scrapped " + currTask.toString());
+            System.out.println("» Okay, I've scrapped " + currTask.toString());
             displayTaskList();
         } catch (NumberFormatException e){
-            System.out.println("If you want me to delete a task, I need a task number with it.");
+            System.out.println("» If you want me to delete a task, I need a task number with it.");
         } catch (IOException e) {
-            System.out.println("no save file :(");
+            System.out.println("» no save file :(");
         }
     }
 
@@ -97,23 +113,23 @@ public class Nanami {
         try {
             int taskNumber = Integer.parseInt(commandWords[1]);
             if (taskNumber >= taskcount || taskNumber < 0) { // if the task does not exist in the tasklist
-                System.out.println("That task isn't on record. Look at it again.");
+                System.out.println("» That task isn't on record. Look at it again.");
                 return;
             }
 
             if (commandWords[0].equals("mark")) {
                 tasklist[taskNumber].markAsDone();
-                System.out.println("I've marked [" + taskNumber + "] as completed.");
+                System.out.println("» I've marked [" + taskNumber + "] as completed.");
             } else {
                 tasklist[taskNumber].markAsUndone();
-                System.out.println("I've marked [" + taskNumber + "] as uncompleted.");
+                System.out.println("» I've marked [" + taskNumber + "] as uncompleted.");
             }
             updateFile(0);
             displayTaskList();
         } catch (NumberFormatException e){
-            System.out.println("If you need me to mark or unmark a task, I need a task number right after the command word.");
+            System.out.println("» If you need me to mark or unmark a task, I need a task number right after the command word.");
         } catch (IOException e) {
-            System.out.println("no save file :(");
+            System.out.println("» no save file :(");
         }
     }
 
@@ -135,7 +151,7 @@ public class Nanami {
             appender = new FileWriter(outfile, true);
             appender.write("xx");
         } catch (IOException e) {
-            System.out.println("could not end the file properly");
+            System.out.println("» could not end the file properly");
         }
     }
 
@@ -152,11 +168,11 @@ public class Nanami {
                 tasklist[taskcount++] = newTask;
                 updateFile(1);
             } catch (EmptyTaskException e) {
-                System.out.println("I can't store a todo like that. It only needs a description, no attachments using /.");
+                System.out.println("» I can't store a todo like that. It only needs a description, no attachments using /.");
             } catch (ToDoMismatchedParameterException e) {
-                System.out.println("A todo task does not have any attachments using /. I can't store it like this.");
+                System.out.println("» A todo task does not have any attachments using /. I can't store it like this.");
             } catch (IOException e) {
-                System.out.println("no save file :(");
+                System.out.println("» no save file :(");
             }
         } else if (inputArray[0].equals("deadline")) {
             try {
@@ -164,11 +180,11 @@ public class Nanami {
                 tasklist[taskcount++] = newTask;
                 updateFile(1);
             } catch (EmptyTaskException e) {
-                System.out.println("The deadline is missing something. I need the task type, description, and /by attachment. Try again.");
+                System.out.println("» The deadline is missing something. I need the task type, description, and /by attachment. Try again.");
             } catch (DeadlineMismatchedParameterException e) {
-                System.out.println("A deadline has a /by attachment only. I can't store it like this.");
+                System.out.println("» A deadline has a /by attachment only. I can't store it like this.");
             } catch (IOException e) {
-                System.out.println("no save file :(");
+                System.out.println("» no save file :(");
             }
         } else if (inputArray[0].equals("event")) {
             try {
@@ -176,14 +192,14 @@ public class Nanami {
                 tasklist[taskcount++] = newTask;
                 updateFile(1);
             } catch (EmptyTaskException e) {
-                System.out.println("The event is missing information. I need the task type, description, and /to and /from attachments. Try again.");
+                System.out.println("» The event is missing information. I need the task type, description, and /to and /from attachments. Try again.");
             } catch (EventMismatchedParameterException e) {
-                System.out.println("An event has a /to attachment and a /from attachment only. I can't store it like this.");
+                System.out.println("» An event has a /to attachment and a /from attachment only. I can't store it like this.");
             } catch (IOException e) {
-                System.out.println("no save file :(");
+                System.out.println("» no save file :(");
             }
         } else {
-            System.out.println("I'm sorry, can you repeat that with the corresponding task type?\nYou can do a todo task, a deadline task, or an event.");
+            System.out.println("» I'm sorry, can you repeat that with the corresponding task type?\nYou can do a todo task, a deadline task, or an event.");
         }
     }
 
