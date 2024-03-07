@@ -78,7 +78,7 @@ public class Nanami {
      *
      * @param commandWords String array containing the list of words inputted by user for this command.
      */
-    private static void changeTaskMarker(String[] commandWords) {
+    public static void changeTaskMarker(String[] commandWords) {
         try {
             int taskNumber = Integer.parseInt(commandWords[1]);
             if (taskNumber >= taskcount || taskNumber < 0) { // if the task does not exist in the tasklist
@@ -109,7 +109,7 @@ public class Nanami {
      * the application terminates.
      *
      */
-    private static void giveFarewell() {
+    public static void giveFarewell() {
         // print a farewell to user
         System.out.println("» Until next time. Goodbye.");
 
@@ -129,7 +129,7 @@ public class Nanami {
      * @return user input line.
      * @throws IOException If input stream is closed/ends unexpectedly, or becomes invalid or corrupted.
      */
-    private static String readUserInputUnwrapped() throws IOException {
+    public static String readUserInputUnwrapped() throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         return in.readLine().trim();
     }
@@ -141,7 +141,7 @@ public class Nanami {
      *
      * @return user input line.
      */
-    private static String readUserInput() {// wrapper function for reading user input
+    public static String readUserInput() {// wrapper function for reading user input
         try {
             return readUserInputUnwrapped();
         } catch (IOException e) {
@@ -157,7 +157,7 @@ public class Nanami {
      * @param mode 0 or 1, indicates whether to append to the current list or rewrite it from the beginning.
      * @throws IOException if the data file cannot be found, is invalid, or is corrupted.
      */
-    private static void updateFile(int mode) throws IOException {
+    public static void updateFile(int mode) throws IOException {
         if (mode == 1) { // just adding to the list
             appender = new FileWriter(outfile, true);
             appender.write(tasklist[taskcount - 1].sendToFile() + "\n");
@@ -179,7 +179,7 @@ public class Nanami {
      * If there is an issue reading the data from the file or rewriting to the file,the user is informed and the application
      * terminates.
      */
-    private static void loadData() {
+    public static void loadData() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("taskDrive.txt"));
             String line = reader.readLine();
@@ -234,7 +234,7 @@ public class Nanami {
      *
      * @param word String representation of the task number that user wants to delete.
      */
-    private static void deleteTask(String word) {
+    public static void deleteTask(String word) {
         try {
             int taskNumber = Integer.parseInt(word);
             if (taskNumber > taskcount || taskNumber < 0) { // if the task does not exist in the tasklist
