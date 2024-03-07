@@ -1,6 +1,11 @@
-T | banna | true
-D | banna | yuh | false
-E | banna | yuh | yuh | false
-T | 4 | true
-D | 4 | 5 | false
-T | bake | false
+T | hafazat | true
+T | 5 | false
+T | 6 | true
+T | 5 | false
+T | 5 | true
+T | 6 | false
+T | 7 | true
+T | banana | false
+D | banana | tmm | true
+E | banana | x | y | false
+xx

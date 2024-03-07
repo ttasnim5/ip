@@ -1,5 +1,6 @@
 package src.main.java.task;
 
+import src.main.java.taskExceptions.DeadlineMismatchedParameterException;
 import src.main.java.taskExceptions.EmptyTaskException;
 import src.main.java.taskExceptions.EventMismatchedParameterException;
 
@@ -16,6 +17,15 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Verifies the validity of the provided user input and creates and returns the corresponding Event task object.
+     * If the input is invalid (contains an empty description or mismatched parameters), the user is reprompted.
+     *
+     * @return the created Deadline object
+     * @param userInputSeparatedBySlash String array containing the list of words inputted by user for this command.
+     * @throws EventMismatchedParameterException if the given input does not include a singular /to attachment and a singular /from attachment.
+     * @throws EmptyTaskException if the given input does not include description body for the Event task.
+     */
     public Event(String[] userInputSeparatedBySlash) throws EventMismatchedParameterException, EmptyTaskException {
         super(userInputSeparatedBySlash[0].replace("event", "").trim());
 
@@ -36,6 +46,11 @@ public class Event extends Task {
         }
     }
 
+    /**
+     * Returns the string representation of the Event task, including the task type, the status of the task, the description
+     * and the times given by /to and /from.
+     * Intended for viewing by the client.
+     */
     @Override
     public String toString() {
         if (isDone){
@@ -45,6 +60,11 @@ public class Event extends Task {
         }
     }
 
+    /**
+     * Returns the string representation of the Event task, including the task type, the description, the times
+     * given by /to and /from, and the status of the task.
+     * Intended for reading of data from the data file.
+     */
     @Override
     public String sendToFile() {
         boolean isDone = true;
