@@ -191,8 +191,12 @@ public class Nanami {
             // rewrite the present list into taskDrive.txt
             updateFile(0);
         } catch (FileNotFoundException e) {
-            System.out.println("\tfile not found\t");
-            applicationOpen = false;
+            try { // new user
+                outfile.createNewFile();
+            } catch (IOException ex) {
+                System.out.println("something's wrong :0");
+                applicationOpen = false;
+            }
         } catch (IOException e) {
             System.out.println("\tio exception\t");
             applicationOpen = false;
