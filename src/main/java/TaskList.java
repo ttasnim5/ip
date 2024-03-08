@@ -1,15 +1,6 @@
 package src.main.java;
 
-import src.main.java.task.Deadline;
-import src.main.java.task.Event;
 import src.main.java.task.Task;
-import src.main.java.task.ToDo;
-import src.main.java.taskExceptions.DeadlineMismatchedParameterException;
-import src.main.java.taskExceptions.EmptyTaskException;
-import src.main.java.taskExceptions.EventMismatchedParameterException;
-import src.main.java.taskExceptions.ToDoMismatchedParameterException;
-
-import java.io.IOException;
 
 public class TaskList {
 
